@@ -1148,7 +1148,7 @@ module.exports = class Page extends Model {
       .replace(emojiRegex(), '')
       // .replace(htmlEntitiesRegex, '')
     return he.decode(data)
-      .replace(punctuationRegex, ' ')
+      // .replace(punctuationRegex, ' ') // -----2022/1/26 注释掉这行可以搜索代码
       .replace(/(\r\n|\n|\r)/gm, ' ')
       .replace(/\s\s+/g, ' ')
       .split(' ').filter(w => w.length > 1).join(' ').toLowerCase()
