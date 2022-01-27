@@ -200,6 +200,10 @@ module.exports = {
     await WIKI.models.knex("pagesVector").truncate();
     await WIKI.models.knex("pagesWords").truncate();
 
+    // TODO 在这里添加await, 遍历所有page, 算出字典， 然后导入结巴
+
+
+
     // tokens = A: title >> B:description >> C: 整词content >> D: 结巴content
     // 只搜索公开的，不搜索私有的
     await pipeline(
@@ -232,7 +236,7 @@ module.exports = {
               page.title,
               page.description,
               content,
-              jieba.cutForSearch(content),
+              jieba.cut(content),
               content,
             ]
           );
