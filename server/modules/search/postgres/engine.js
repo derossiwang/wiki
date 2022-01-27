@@ -3,8 +3,7 @@ const stream = require("stream");
 const Promise = require("bluebird");
 const pipeline = Promise.promisify(stream.pipeline);
 
-const jieba = require("@node-rs/jieba");
-jieba.load();
+const jieba = require("nodejieba");
 /* global WIKI */
 
 module.exports = {
@@ -100,6 +99,7 @@ module.exports = {
         );
         suggestions = suggestResults.rows.map((r) => r.word);
       }
+      console.log(JSON.stringify(results.rows));
       return {
         results: results.rows,
         suggestions,
