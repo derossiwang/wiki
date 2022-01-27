@@ -3,6 +3,8 @@ const stream = require("stream");
 const Promise = require("bluebird");
 const pipeline = Promise.promisify(stream.pipeline);
 
+const jieba = require("@node-rs/jieba");
+jieba.load();
 /* global WIKI */
 
 module.exports = {
@@ -214,10 +216,12 @@ module.exports = {
         objectMode: true,
         transform: async (page, enc, cb) => {
           const content = WIKI.models.pages.cleanHTML(page.render);
+          // console.log(jieba.cutForSearch(content));
+
           await WIKI.models.knex.raw(
             `
             INSERT INTO "pagesVector" (path, locale, title, description, "tokens", content) VALUES (
-              ?, ?, ?, ?, (setweight(to_tsvector('${this.config.dictLanguage}', ?), 'A') || setweight(to_tsvector('${this.config.dictLanguage}', ?), 'B') || setweight(to_tsvector('${this.config.dictLanguage}', ?), 'C')), ?
+              ?, ?, ?, ?, (setweight(to_tsvector('${this.config.dictLanguage}', ?), 'A') || setweight(to_tsvector('${this.config.dictLanguage}', ?), 'B') || setweight(to_tsvector('${this.config.dictLanguage}', ?), 'C') || setweight(to_tsvector('${this.config.dictLanguage}', ?), 'D')), ?
             )
           `,
             [
@@ -228,6 +232,7 @@ module.exports = {
               page.title,
               page.description,
               content,
+              jieba.cutForSearch(content),
               content,
             ]
           );
